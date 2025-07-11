@@ -13,10 +13,18 @@
     <name>fhir-conditions</name>
     <description>FHIR schema validation utility with JSON Schema files</description>
 
+    <!-- ✅ JitPack repo to fetch Everit JSON Schema -->
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
-        <!-- Everit JSON Schema Validator -->
+        <!-- ✅ Everit JSON Schema from GitHub via JitPack -->
         <dependency>
-            <groupId>org.everit.json</groupId>
+            <groupId>com.github.everit-org.json-schema</groupId>
             <artifactId>org.everit.json.schema</artifactId>
             <version>1.14.2</version>
         </dependency>

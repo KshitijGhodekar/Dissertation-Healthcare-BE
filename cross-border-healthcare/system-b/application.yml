@@ -24,6 +24,18 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
 
+  mail:
+    host: smtp-relay.brevo.com
+    port: 587
+    username: kshitijdghodekar@gmail.com
+    password: O1sGcZxvnbhU6yLw
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 topic:
   patient-data: patient-data-request
 

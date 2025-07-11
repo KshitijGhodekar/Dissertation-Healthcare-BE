@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: hospital-b
+
+  datasource:
+    url: jdbc:postgresql://postgres-b:5432/patients_data
+    username: postgres
+    password: Kshitij@7
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: hospitalB-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+topic:
+  patient-data: patient-data-request
+
+server:
+  port: 8081
+
+spring.kafka.consumer.group-id: hospitalB-group

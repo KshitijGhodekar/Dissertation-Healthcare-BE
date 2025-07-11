@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.crossborder</groupId>
+    <artifactId>fhir-conditions</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>fhir-conditions</name>
+    <description>FHIR schema validation utility with JSON Schema files</description>
+
+    <dependencies>
+        <!-- Everit JSON Schema Validator -->
+        <dependency>
+            <groupId>org.everit.json</groupId>
+            <artifactId>org.everit.json.schema</artifactId>
+            <version>1.14.2</version>
+        </dependency>
+
+        <!-- org.json for raw JSON manipulation -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20230227</version>
+        </dependency>
+    </dependencies>
+</project>

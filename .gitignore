@@ -27,3 +27,18 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# Maven build outputs
+target/
+*.jar
+*.class
+
+# Fabric/Hyperledger credentials
+*.pem
+*key_sk
+*.crt
+wallet/
+
+# Docker/Runtime
+*.log
+.env

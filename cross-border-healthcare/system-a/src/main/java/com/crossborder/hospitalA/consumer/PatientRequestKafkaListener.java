@@ -15,10 +15,10 @@ public class PatientRequestKafkaListener {
     @KafkaListener(topics = "patient-data-request", groupId = "hospitalA-group")
     public void handleRequest(PatientDataRequest request) {
         try {
-            System.out.printf("📥 Received Kafka request: %s%n", request);
+            System.out.printf("Received Kafka request: %s%n", request);
             handlerService.processRequest(request);
         } catch (Exception e) {
-            System.err.printf("❌ Failed to process Kafka request: %s%n", e.getMessage());
+            System.err.printf("Failed to process Kafka request: %s%n", e.getMessage());
             e.printStackTrace();
         }
     }

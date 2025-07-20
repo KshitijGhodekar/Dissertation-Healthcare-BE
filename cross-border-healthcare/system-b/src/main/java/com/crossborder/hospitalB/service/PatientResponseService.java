@@ -6,10 +6,11 @@ import com.crossborder.hospitalB.repository.PatientRepository;
 import com.fhir.validator.FHIRValidator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Service
 public class PatientResponseService {
@@ -24,36 +25,48 @@ public class PatientResponseService {
 
     public void processPatientData(byte[] encryptedData) {
         try {
-            /* 1️⃣  Decrypt */
+            // Step 1: Decrypt
             String decryptedJson = AESEncryptionUtil.decrypt(encryptedData);
-            /* 2️⃣  Parse full JSON tree */
-            JsonNode fullJson = mapper.readTree(decryptedJson);
+            System.out.println("Decrypted JSON:\n" + decryptedJson);
 
-            /* 3️⃣  Build minimal JSON for validation */
-            ObjectNode validatable = mapper.createObjectNode();
-            validatable.put("patientId", fullJson.path("patientId").asText(""));
-            validatable.put("name",      fullJson.path("name").asText(""));
-            validatable.put("diagnosis", fullJson.path("diagnosis").asText(""));
+            // Step 2: Parse JSON
+            JsonNode json = mapper.readTree(decryptedJson);
 
-            System.out.println("🧪 Will validate:\n" + validatable.toPrettyString());
+            // Step 3: FHIR Validation
+            FHIRValidator.validatePatient(new JSONObject(decryptedJson));
 
-            /* 4️⃣  Validate against schema */
-            FHIRValidator.validatePatient(new JSONObject(validatable.toString()));
+            // Step 4: Map to JPA entity
+            PatientEntity patient = new PatientEntity();
+            patient.setPatientId(json.path("patientId").asText());
+            patient.setName(json.path("name").asText());
+            patient.setAge(json.path("age").asInt());
+            patient.setGender(json.path("gender").asText());
+            patient.setBloodType(json.path("bloodType").asText());
+            patient.setMedicalCondition(json.path("medicalCondition").asText());
+            patient.setDateOfAdmission(LocalDate.parse(json.path("dateOfAdmission").asText()));
+            patient.setDischargeDate(LocalDate.parse(json.path("dischargeDate").asText()));
+            patient.setDoctor(json.path("doctor").asText()); // doctor from System A DB
+            patient.setHospital(json.path("hospital").asText());
+            patient.setMedication(json.path("medication").asText());
+            patient.setTestResults(json.path("testResults").asText());
 
-            /* 5️⃣  Persist full entity */
-            PatientEntity patient = mapper.treeToValue(fullJson, PatientEntity.class);
+            // Step 5: Save patient
             patientRepository.save(patient);
-            System.out.println("✅ Patient data saved for: " + patient.getPatientId());
+            System.out.println("Patient saved: " + patient.getPatientId());
 
-            emailService.sendAccessAlert(
-                    "kshitijdghodekar@gmail.com",          // replace with actual doctor email
-                    patient.getDoctorId(),
-                    patient.getPatientId(),
-                    true // access granted
+            // Step 6: Get doctorName from JSON
+            String doctorName = json.path("doctorName").asText(); // ✅ name from request
+
+            // Step 7: Send email
+            emailService.sendPatientDataPDF(
+                    "kshitijdghodekar@gmail.com",
+                    doctorName,
+                    patient,
+                    true
             );
 
         } catch (Exception e) {
-            System.err.println("❌ Error in processPatientData: " + e.getMessage());
+            System.err.println("Error in processPatientData: " + e.getMessage());
             e.printStackTrace();
         }
     }

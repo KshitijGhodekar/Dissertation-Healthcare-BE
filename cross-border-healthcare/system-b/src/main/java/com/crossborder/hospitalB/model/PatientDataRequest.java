@@ -4,19 +4,21 @@ import java.io.Serializable;
 
 public class PatientDataRequest implements Serializable {
     private String doctorId;
+    private String doctorName;
     private String patientId;
     private String timestamp;
     private String purpose;
-    private String hospitalName; // ✅ added
+    private String hospitalName;
 
     public PatientDataRequest() {}
 
-    public PatientDataRequest(String doctorId, String patientId, String timestamp, String purpose, String hospitalName) {
+    public PatientDataRequest(String doctorId, String doctorName, String patientId, String timestamp, String purpose, String hospitalName) {
         this.doctorId = doctorId;
+        this.doctorName = doctorName;
         this.patientId = patientId;
         this.timestamp = timestamp;
         this.purpose = purpose;
-        this.hospitalName = hospitalName; // ✅ added
+        this.hospitalName = hospitalName;
     }
 
     public String getDoctorId() {
@@ -25,6 +27,14 @@ public class PatientDataRequest implements Serializable {
 
     public void setDoctorId(String doctorId) {
         this.doctorId = doctorId;
+    }
+
+    public String getDoctorName() {
+        return doctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
     }
 
     public String getPatientId() {

@@ -16,8 +16,8 @@ COPY src/main/resources/peer0-org1-tls.crt src/main/resources/peer0-org1-tls.crt
 
 
 # ✅ Copy crypto material into image (for in-memory wallet)
-COPY src/main/resources/crypto-config/cert.pem cert.pem
-COPY src/main/resources/crypto-config/key_sk key_sk
+COPY src/main/resources/fabric-identities/cert.pem cert.pem
+COPY src/main/resources/fabric-identities/key_sk key_sk
 
 
 

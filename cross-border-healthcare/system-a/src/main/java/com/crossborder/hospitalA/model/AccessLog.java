@@ -12,19 +12,22 @@ public class AccessLog {
     private Long id;
 
     private String doctorId;
+    private String doctorName;
     private String patientId;
     private String purpose;
     private String hospitalName;
-    private String timestamp; // from request
+    private String timestamp;
     private boolean accessGranted;
 
     public AccessLog() {}
 
-    // ✅ Getters and setters
     public Long getId() { return id; }
 
     public String getDoctorId() { return doctorId; }
     public void setDoctorId(String doctorId) { this.doctorId = doctorId; }
+
+    public String getDoctorName() { return doctorName; }
+    public void setDoctorName(String doctorName) { this.doctorName = doctorName; }
 
     public String getPatientId() { return patientId; }
     public void setPatientId(String patientId) { this.patientId = patientId; }

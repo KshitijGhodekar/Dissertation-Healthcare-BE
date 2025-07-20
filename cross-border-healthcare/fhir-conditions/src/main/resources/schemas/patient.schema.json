@@ -1,17 +1,30 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Simplified Patient Resource",
+  "title": "Enriched Patient Resource",
   "type": "object",
-  "required": ["patientId", "name", "diagnosis"],
+  "required": [
+    "patientId", "name", "age", "gender", "bloodType",
+    "medicalCondition", "dateOfAdmission", "dischargeDate",
+    "doctor", "hospital", "medication", "testResults"
+  ],
   "properties": {
-    "patientId": {
-      "type": "string"
+    "patientId": { "type": "string" },
+    "name": { "type": "string" },
+    "age": { "type": "integer", "minimum": 0 },
+    "gender": { "type": "string", "enum": ["Male", "Female", "Other"] },
+    "bloodType": { "type": "string" },
+    "medicalCondition": { "type": "string" },
+    "dateOfAdmission": {
+      "type": "string",
+      "format": "date"
     },
-    "name": {
-      "type": "string"
+    "dischargeDate": {
+      "type": "string",
+      "format": "date"
     },
-    "diagnosis": {
-      "type": "string"
-    }
+    "doctor": { "type": "string" },
+    "hospital": { "type": "string" },
+    "medication": { "type": "string" },
+    "testResults": { "type": "string" }
   }
 }

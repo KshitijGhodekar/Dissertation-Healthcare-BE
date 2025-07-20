@@ -5,7 +5,7 @@ const { Contract } = require('fabric-contract-api');
 class HealthcareContract extends Contract {
 
     async initLedger(ctx) {
-        console.info('🚀 Ledger initialized');
+        console.info(' Ledger initialized');
     }
 
     async createPatient(ctx, id, name, age) {
@@ -15,13 +15,13 @@ class HealthcareContract extends Contract {
             docType: 'patient'
         };
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(patient)));
-        return `✅ Patient ${name} created`;
+        return `Patient ${name} created`;
     }
 
     async readPatient(ctx, id) {
         const data = await ctx.stub.getState(id);
         if (!data || data.length === 0) {
-            throw new Error(`❌ Patient with ID ${id} not found`);
+            throw new Error(` Patient with ID ${id} not found`);
         }
         return data.toString();
     }

@@ -16,30 +16,33 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>system-a-india-hospital</name>
-    <description>Spring Boot Kafka Producer for India Hospital</description>
+    <name>system-b-ireland-hospital</name>
+    <description>Spring Boot Kafka Consumer for Ireland Hospital</description>
 
     <properties>
         <java.version>17</java.version>
     </properties>
 
     <dependencies>
-        <!-- Web -->
+        <!-- Spring Boot Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Kafka -->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
-        <!-- JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
         <!-- PostgreSQL -->
@@ -49,7 +52,7 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Base64 and AES -->
+        <!-- AES Encryption -->
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
@@ -60,25 +63,19 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-        </dependency>
 
-        <!-- Fabric Java SDK -->
+        <!-- Hyperledger Fabric -->
         <dependency>
             <groupId>org.hyperledger.fabric-sdk-java</groupId>
             <artifactId>fabric-sdk-java</artifactId>
             <version>1.4.12</version>
         </dependency>
 
-        <!-- Fabric Gateway -->
         <dependency>
             <groupId>org.hyperledger.fabric</groupId>
-            <artifactId>fabric-gateway-java</artifactId>  <!-- ← IMPORTANT: "-java" -->
+            <artifactId>fabric-gateway-java</artifactId>
             <version>2.2.9</version>
         </dependency>
-
 
         <!-- Logging -->
         <dependency>
@@ -87,7 +84,38 @@
             <version>1.7.36</version>
         </dependency>
 
-        <!-- Tests -->
+        <!-- FHIR Validator module -->
+        <dependency>
+            <groupId>com.crossborder</groupId>
+            <artifactId>fhir-conditions</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <!-- Email + PDF -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
+        <!-- iText PDF Dependencies -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>kernel</artifactId>
+            <version>8.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>layout</artifactId>
+            <version>8.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>io</artifactId>
+            <version>8.0.2</version>
+        </dependency>
+
+        <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -95,13 +123,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.crossborder</groupId>
-            <artifactId>fhir-conditions</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>bouncy-castle-adapter</artifactId>
+            <version>8.0.2</version>
         </dependency>
 
     </dependencies>

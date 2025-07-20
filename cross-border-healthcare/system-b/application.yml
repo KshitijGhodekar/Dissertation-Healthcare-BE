@@ -27,7 +27,7 @@ spring:
   mail:
     host: smtp-relay.brevo.com
     port: 587
-    username: kshitijdghodekar@gmail.com
+    username: 91d74b002@smtp-brevo.com
     password: O1sGcZxvnbhU6yLw
     properties:
       mail:
@@ -38,6 +38,10 @@ spring:
 
 topic:
   patient-data: patient-data-request
+
+hospital:
+  kafka:
+    topic: ireland-hospital-response
 
 server:
   port: 8081

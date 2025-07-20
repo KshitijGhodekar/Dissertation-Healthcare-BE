@@ -25,21 +25,21 @@ public class FabricClient {
     private final Contract contract;
 
     public FabricClient() throws Exception {
-        log.info("📂 Creating in-memory wallet");
+        log.info("------Creating in-memory wallet------");
 
         Path certPath = Paths.get("cert.pem");
         Path keyPath  = Paths.get("key_sk");
 
+        //If adding certifica
         String certPem         = Files.readString(certPath);
         PrivateKey privateKey  = Identities.readPrivateKey(Files.newBufferedReader(keyPath));
         X509Certificate cert   = readX509Certificate(certPem);
 
         Wallet wallet = Wallets.newInMemoryWallet();
         wallet.put("admin", Identities.newX509Identity("Org1MSP", cert, privateKey));
-        log.info("🔑 Loaded 'admin' identity into in-memory wallet");
+        log.info("Loaded 'Doctor' identity into in-memory wallet");
 
         Path networkConfigPath = Paths.get("connection-org1.json");
-        log.info("📑 Using connection profile: {}", networkConfigPath.toAbsolutePath());
 
         Gateway.Builder builder = Gateway.createBuilder()
                 .identity(wallet, "admin")
@@ -48,36 +48,36 @@ public class FabricClient {
 
         this.gateway  = builder.connect();
         this.network  = gateway.getNetwork("mychannel");
-        this.contract = network.getContract("healthcare");      // your chaincode
+        this.contract = network.getContract("healthcare");      // chaincode
 
-        log.info("✅ FabricClient initialised — channel: {}", network.getChannel().getName());
+        log.info("FabricClient initialised — channel: {}", network.getChannel().getName());
     }
 
-    // 🩺 Verify doctor access to patient
+    // Verify doctor access to patient
     public boolean isDoctorAuthorized(String doctorId, String patientId, String purpose, String hospitalName) throws Exception {
-        log.debug("🔍 Calling verifyAccess({}, {}, {}, {})", doctorId, patientId, purpose, hospitalName);
+        log.debug("Calling verifyAccess({}, {}, {}, {})", doctorId, patientId, purpose, hospitalName);
         byte[] result = contract.evaluateTransaction("verifyAccess", doctorId, patientId, purpose, hospitalName);
 
         JsonNode json = new ObjectMapper().readTree(result);
         boolean authorized = json.has("authorized") && json.get("authorized").asBoolean();
 
-        log.info("🔐 Access check doctor {} → authorized={}", doctorId, authorized);
+        log.info("Access check doctor {} → authorized={}", doctorId, authorized);
         return authorized;
     }
 
-    // 🏥 Submit patient data (createPatient on-chain)
+    // Submit patient data (createPatient on-chain)
     public void submitPatientData(String patientId, String name, String age) throws Exception {
-        log.debug("📦 Submitting createPatient({}, {}, {})", patientId, name, age);
+        log.debug("Submitting createPatient({}, {}, {})", patientId, name, age);
         byte[] result = contract.submitTransaction("createPatient", patientId, name, age);
-        log.info("📦 Fabric result: {}", new String(result, StandardCharsets.UTF_8));
+        log.info("Fabric result: {}", new String(result, StandardCharsets.UTF_8));
     }
 
     public void close() {
-        log.info("🔒 Closing Fabric gateway");
+        log.info("Closing Fabric gateway");
         gateway.close();
     }
 
-    // 📜 Utility: Convert PEM to X509 cert
+    // Utility: Convert PEM to X509 cert
     private static X509Certificate readX509Certificate(String pem) throws Exception {
         CertificateFactory factory = CertificateFactory.getInstance("X.509");
         try (InputStream certStream =

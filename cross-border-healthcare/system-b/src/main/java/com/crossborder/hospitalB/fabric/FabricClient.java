@@ -20,25 +20,25 @@ public class FabricClient {
     private final Contract contract;
 
     public FabricClient() throws Exception {
-        log.info("📂 Creating in-memory wallet");
+        log.info("--------Creating in-memory wallet------");
 
-        /* 1️⃣  Read cert & key that were copied into the Docker image */
-        Path certPath = Paths.get("cert.pem");   // <—  /app/cert.pem inside container
-        Path keyPath  = Paths.get("key_sk");     // <—  /app/key_sk  inside container
+        /* Read cert & key that were copied into the Docker image */
+        Path certPath = Paths.get("cert.pem");
+        Path keyPath  = Paths.get("key_sk");
 
         X509Certificate certificate = Identities.readX509Certificate(Files.newBufferedReader(certPath));
         PrivateKey privateKey       = Identities.readPrivateKey      (Files.newBufferedReader(keyPath));
 
-        /* 2️⃣  Build in-memory wallet and add admin identity */
+        /* Build in-memory wallet and add admin identity */
         Wallet wallet = Wallets.newInMemoryWallet();
         wallet.put("admin", Identities.newX509Identity("Org1MSP", certificate, privateKey));
         log.info("🔑 Loaded 'admin' identity into in-memory wallet");
 
-        /* 3️⃣  Connection profile (bundled in the JAR) */
+        /* Connection profile (bundled in the JAR) */
         Path networkConfigPath = Paths.get("connection-org1.json");
         log.info("📑 Using connection profile: {}", networkConfigPath.toAbsolutePath());
 
-        /* 4️⃣  Connect gateway */
+        /* Connect gateway */
         Gateway.Builder builder = Gateway.createBuilder()
                 .identity(wallet, "admin")
                 .networkConfig(networkConfigPath)
@@ -48,7 +48,7 @@ public class FabricClient {
         this.network  = gateway.getNetwork("mychannel");
         this.contract = network.getContract("healthcare");
 
-        log.info("✅ FabricClient initialised — channel: {}", network.getChannel().getName());
+        log.info("FabricClient initialised — channel: {}", network.getChannel().getName());
     }
 
     /* ---------- helper methods ---------- */

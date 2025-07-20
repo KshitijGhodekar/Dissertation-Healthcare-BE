@@ -22,9 +22,9 @@ public class PatientRequestKafkaProducer {
             String json = objectMapper.writeValueAsString(request);
             kafkaTemplate.send(TOPIC, request.getPatientId(), json);
 
-            System.out.println("📤 Patient data request sent for ID: " + request.getPatientId());
+            System.out.println("Patient data request sent for ID: " + request.getPatientId());
         } catch (Exception e) {
-            System.err.println("❌ Kafka send error: " + e.getMessage());
+            System.err.println("Kafka send error: " + e.getMessage());
             e.printStackTrace();
         }
     }

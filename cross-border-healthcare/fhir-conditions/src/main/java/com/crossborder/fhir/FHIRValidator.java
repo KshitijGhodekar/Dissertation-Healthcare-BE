@@ -31,7 +31,7 @@ public class FHIRValidator {
             schema.validate(data);
 
         } catch (ValidationException ve) {
-            System.out.println("❌ Schema violations:");
+            System.out.println("Schema violations:");
             ve.getAllMessages().forEach(msg -> System.out.println(" • " + msg));
             throw new RuntimeException("FHIR JSON validation failed: " + ve.getMessage(), ve);
 

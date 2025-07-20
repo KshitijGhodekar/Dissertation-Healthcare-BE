@@ -11,7 +11,11 @@ public class PatientResponseKafkaListener {
     @Autowired
     private PatientResponseService consumerService;
 
-    @KafkaListener(topics = "patient-data-response", groupId = "hospitalB-group", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(
+            topics = "${hospital.kafka.topic}",
+            groupId = "hospitalB-group",
+            containerFactory = "kafkaListenerContainerFactory"
+    )
     public void listen(byte[] message) {
         System.out.println("Received encrypted patient data");
         consumerService.processPatientData(message);

@@ -17,13 +17,13 @@ public class PatientRequestController {
     public ResponseEntity<String> requestPatientData(@RequestBody PatientDataRequest request) {
         try {
             producerService.sendPatientDataRequest(request);
-            return ResponseEntity.ok("✅ Request sent successfully.");
+            return ResponseEntity.ok("Request sent successfully.");
         } catch (Exception e) {
             // Log for debugging (optional)
             e.printStackTrace();
             return ResponseEntity
                     .status(500)
-                    .body("❌ Failed to send request: " + e.getMessage());
+                    .body("Failed to send request: " + e.getMessage());
         }
     }
 }

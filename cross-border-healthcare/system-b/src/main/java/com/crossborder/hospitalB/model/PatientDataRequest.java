@@ -1,21 +1,24 @@
 package com.crossborder.hospitalB.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class PatientDataRequest implements Serializable {
     private String doctorId;
     private String doctorName;
     private String patientId;
+    private List<String> patientIds;
     private String timestamp;
     private String purpose;
     private String hospitalName;
 
     public PatientDataRequest() {}
 
-    public PatientDataRequest(String doctorId, String doctorName, String patientId, String timestamp, String purpose, String hospitalName) {
+    public PatientDataRequest(String doctorId, String doctorName, String patientId, List<String> patientIds, String timestamp, String purpose, String hospitalName) {
         this.doctorId = doctorId;
         this.doctorName = doctorName;
         this.patientId = patientId;
+        this.patientIds = patientIds;
         this.timestamp = timestamp;
         this.purpose = purpose;
         this.hospitalName = hospitalName;
@@ -43,6 +46,14 @@ public class PatientDataRequest implements Serializable {
 
     public void setPatientId(String patientId) {
         this.patientId = patientId;
+    }
+
+    public List<String> getPatientIds() {
+        return patientIds;
+    }
+
+    public void setPatientIds(List<String> patientIds) {
+        this.patientIds = patientIds;
     }
 
     public String getTimestamp() {

@@ -23,6 +23,7 @@ public class PatientEntity {
     private String hospital;
     private String medication;
     private String testResults;
+    private String mobileNumber;
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -63,4 +64,12 @@ public class PatientEntity {
 
     public String getTestResults() { return testResults; }
     public void setTestResults(String testResults) { this.testResults = testResults; }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
 }

@@ -4,7 +4,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 
-public class AESDeryptionUtil {
+public class AESEncryptionUtil {
     private static final String AES = "AES";
     private static final String SECRET_KEY = "1234567890123456"; // 16-char key
 

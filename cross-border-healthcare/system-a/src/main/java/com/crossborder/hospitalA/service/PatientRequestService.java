@@ -1,6 +1,7 @@
 package com.crossborder.hospitalA.service;
 
 import com.crossborder.hospitalA.encryption.AESEncryptionUtil;
+import com.crossborder.hospitalA.encryption.ECDSAUtil;
 import com.crossborder.hospitalA.fabric.FabricClient;
 import com.crossborder.hospitalA.model.AccessLog;
 import com.crossborder.hospitalA.model.FabricLog;
@@ -14,6 +15,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Service
 public class PatientRequestService {
@@ -37,7 +41,7 @@ public class PatientRequestService {
         System.out.println("Incoming Request: " + request.toString());
 
         try {
-            // Verify access on-chain
+            // 1. Check access with Fabric
             fabricClient = new FabricClient();
             accessGranted = fabricClient.isDoctorAuthorized(
                     request.getDoctorId(),
@@ -46,7 +50,7 @@ public class PatientRequestService {
                     request.getHospitalName()
             );
 
-            // Log access attempt
+            // 2. Save access log
             AccessLog accessLog = new AccessLog();
             accessLog.setDoctorId(request.getDoctorId());
             accessLog.setDoctorName(request.getDoctorName());
@@ -57,7 +61,7 @@ public class PatientRequestService {
             accessLog.setAccessGranted(accessGranted);
             accessLogRepository.save(accessLog);
 
-            // Log to FabricLog table
+            // 3. Save Fabric log
             FabricLog fabricLog = new FabricLog();
             fabricLog.setDoctorId(request.getDoctorId());
             fabricLog.setDoctorName(request.getDoctorName());
@@ -66,19 +70,20 @@ public class PatientRequestService {
             fabricLog.setTimestamp(request.getTimestamp());
             fabricLogRepository.save(fabricLog);
 
+            // 4. If denied, exit
             if (!accessGranted) {
                 System.out.println("Access denied for Doctor ID: " + request.getDoctorId());
                 return;
             }
 
-            // Fetch patient record
+            // 5. Fetch patient from DB
             PatientEntity patient = patientRepository.findByPatientId(request.getPatientId());
             if (patient == null) {
                 System.out.println("Patient not found: " + request.getPatientId());
                 return;
             }
 
-            // Build enriched JSON
+            // 6. Build enriched FHIR-style JSON
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode patientJson = mapper.createObjectNode();
             patientJson.put("patientId", patient.getPatientId());
@@ -96,18 +101,26 @@ public class PatientRequestService {
             patientJson.put("testResults", patient.getTestResults());
 
             String json = mapper.writeValueAsString(patientJson);
-            System.out.println("🔍 Sending enriched JSON:");
+            System.out.println("Enriched Patient JSON:");
             System.out.println(json);
 
-            // Optional: Skip FHIRValidator for now, or adapt if needed
-            // FHIRValidator.validatePatient(new JSONObject(json));
-
-            // Encrypt and send to Kafka
+            // 7. Encrypt with AES
             byte[] encrypted = AESEncryptionUtil.encryptToBytes(json);
-            String topic = resolveTopic(request.getHospitalName());
-            binaryKafkaTemplate.send(topic, request.getPatientId(), encrypted);
 
-            System.out.println("Encrypted data sent to topic: " + topic);
+            // 8. Sign encrypted data with ECDSA
+            String encryptedBase64 = Base64.getEncoder().encodeToString(encrypted);
+            String signature = ECDSAUtil.sign(encryptedBase64);
+
+            // 9. Build Kafka message with signature (NO public key sent)
+            ObjectNode signedPayload = mapper.createObjectNode();
+            signedPayload.put("encryptedData", encryptedBase64);
+            signedPayload.put("signature", signature);
+
+            byte[] kafkaPayload = signedPayload.toString().getBytes(StandardCharsets.UTF_8);
+            String topic = resolveTopic(request.getHospitalName());
+            binaryKafkaTemplate.send(topic, request.getPatientId(), kafkaPayload);
+
+            System.out.println("Signed + Encrypted data sent to topic: " + topic);
 
         } catch (Exception e) {
             System.err.println("Exception in processing request: " + e.getMessage());
@@ -119,7 +132,6 @@ public class PatientRequestService {
         }
     }
 
-    // Dynamic topic resolution
     private String resolveTopic(String hospitalName) {
         return hospitalName.toLowerCase().replaceAll("\\s+", "-") + "-response";
     }

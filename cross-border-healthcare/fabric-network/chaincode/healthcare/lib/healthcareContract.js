@@ -56,13 +56,11 @@ class HealthcareContract extends Contract {
 
     async deletePatient(ctx, id) {
         await ctx.stub.deleteState(id);
-        return `🗑️ Patient ${id} deleted`;
+        return `Patient ${id} deleted`;
     }
 
     async verifyAccess(ctx, doctorId, patientId, purpose, hospital) {
-        console.info(`🔐 Verifying access for doctor ${doctorId} to patient ${patientId} for ${purpose} at ${hospital}`);
-
-        // For demo purposes, always allow
+        console.info(`Verifying access for doctor ${doctorId} to patient ${patientId} for ${purpose} at ${hospital}`);
         const result = {
             authorized: true,
             doctorId,
@@ -85,7 +83,7 @@ class HealthcareContract extends Contract {
         };
 
         await ctx.stub.putState(logKey, Buffer.from(JSON.stringify(logEntry)));
-        return `📝 Access logged for Doctor ${doctorId} on Patient ${patientId}`;
+        return `Access logged for Doctor ${doctorId} on Patient ${patientId}`;
     }
 }
 

@@ -47,7 +47,7 @@ public class EmailNotificationService {
             PdfFont boldFont = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
 
             // Title
-            Paragraph title = new Paragraph("🩺 Patient Health Report")
+            Paragraph title = new Paragraph("Patient Health Report")
                     .setFont(boldFont)
                     .setFontSize(16)
                     .setMarginBottom(20);

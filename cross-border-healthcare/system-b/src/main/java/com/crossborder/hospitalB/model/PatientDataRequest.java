@@ -11,10 +11,12 @@ public class PatientDataRequest implements Serializable {
     private String timestamp;
     private String purpose;
     private String hospitalName;
+    private String requestId;
 
     public PatientDataRequest() {}
 
-    public PatientDataRequest(String doctorId, String doctorName, String patientId, List<String> patientIds, String timestamp, String purpose, String hospitalName) {
+    public PatientDataRequest(String doctorId, String doctorName, String patientId, List<String> patientIds,
+                              String timestamp, String purpose, String hospitalName, String requestId) {
         this.doctorId = doctorId;
         this.doctorName = doctorName;
         this.patientId = patientId;
@@ -22,61 +24,31 @@ public class PatientDataRequest implements Serializable {
         this.timestamp = timestamp;
         this.purpose = purpose;
         this.hospitalName = hospitalName;
+        this.requestId = requestId;
     }
 
-    public String getDoctorId() {
-        return doctorId;
-    }
+    // Getters and Setters
+    public String getDoctorId() { return doctorId; }
+    public void setDoctorId(String doctorId) { this.doctorId = doctorId; }
 
-    public void setDoctorId(String doctorId) {
-        this.doctorId = doctorId;
-    }
+    public String getDoctorName() { return doctorName; }
+    public void setDoctorName(String doctorName) { this.doctorName = doctorName; }
 
-    public String getDoctorName() {
-        return doctorName;
-    }
+    public String getPatientId() { return patientId; }
+    public void setPatientId(String patientId) { this.patientId = patientId; }
 
-    public void setDoctorName(String doctorName) {
-        this.doctorName = doctorName;
-    }
+    public List<String> getPatientIds() { return patientIds; }
+    public void setPatientIds(List<String> patientIds) { this.patientIds = patientIds; }
 
-    public String getPatientId() {
-        return patientId;
-    }
+    public String getTimestamp() { return timestamp; }
+    public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
 
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
+    public String getPurpose() { return purpose; }
+    public void setPurpose(String purpose) { this.purpose = purpose; }
 
-    public List<String> getPatientIds() {
-        return patientIds;
-    }
+    public String getHospitalName() { return hospitalName; }
+    public void setHospitalName(String hospitalName) { this.hospitalName = hospitalName; }
 
-    public void setPatientIds(List<String> patientIds) {
-        this.patientIds = patientIds;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getPurpose() {
-        return purpose;
-    }
-
-    public void setPurpose(String purpose) {
-        this.purpose = purpose;
-    }
-
-    public String getHospitalName() {
-        return hospitalName;
-    }
-
-    public void setHospitalName(String hospitalName) {
-        this.hospitalName = hospitalName;
-    }
+    public String getRequestId() { return requestId; }
+    public void setRequestId(String requestId) { this.requestId = requestId; }
 }

@@ -23,7 +23,7 @@ public class ECDSAUtil {
         return kf.generatePublic(spec);
     }
 
-    // Verify ECDSA signature using local public key
+    // Verifies ECDSA signature using local public key
     public static boolean verify(String data, String base64Signature) throws Exception {
         PublicKey publicKey = loadPublicKey();
         Signature verifier = Signature.getInstance("SHA256withECDSA");
@@ -33,9 +33,33 @@ public class ECDSAUtil {
         return verifier.verify(sigBytes);
     }
 
-    // Export local public key in Base64 (logging/debug)
+    // Debug: Export public key
     public static String getPublicKeyBase64() throws Exception {
         PublicKey publicKey = loadPublicKey();
         return Base64.getEncoder().encodeToString(publicKey.getEncoded());
+    }
+
+    // New method for unit test signing (uses local test private key)
+    public static String sign(String message) throws Exception {
+        InputStream is = ECDSAUtil.class.getClassLoader().getResourceAsStream("ecdsa/ec_private_pkcs8.pem");
+        if (is == null) throw new IllegalArgumentException("Private key file not found");
+
+        byte[] keyBytes = is.readAllBytes();
+        String pem = new String(keyBytes, StandardCharsets.UTF_8)
+                .replace("-----BEGIN PRIVATE KEY-----", "")
+                .replace("-----END PRIVATE KEY-----", "")
+                .replaceAll("\\s", "");
+
+        byte[] decoded = Base64.getDecoder().decode(pem);
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
+        KeyFactory kf = KeyFactory.getInstance("EC");
+        PrivateKey privateKey = kf.generatePrivate(spec);
+
+        Signature signer = Signature.getInstance("SHA256withECDSA");
+        signer.initSign(privateKey);
+        signer.update(message.getBytes(StandardCharsets.UTF_8));
+        byte[] signature = signer.sign();
+
+        return Base64.getEncoder().encodeToString(signature);
     }
 }

@@ -16,51 +16,54 @@ public class FabricLog {
     private String status;
     private String timestamp;
 
-    public Long getId() {
-        return id;
-    }
+    // New Fabric Transaction Details
+    private String transactionId;
+    private Long blockNumber;
+    private String validationCode;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(length = 5000)
+    private String responsePayload;
 
-    public String getDoctorId() {
-        return doctorId;
-    }
+    @Column(length = 5000)
+    private String inputArgs;  // JSON array as string
 
-    public void setDoctorId(String doctorId) {
-        this.doctorId = doctorId;
-    }
+    @Column(length = 5000)
+    private String endorsers;  // JSON array as string
 
-    public String getDoctorName() {
-        return doctorName;
-    }
+    // Getters & Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setDoctorName(String doctorName) {
-        this.doctorName = doctorName;
-    }
+    public String getDoctorId() { return doctorId; }
+    public void setDoctorId(String doctorId) { this.doctorId = doctorId; }
 
-    public String getPatientId() {
-        return patientId;
-    }
+    public String getDoctorName() { return doctorName; }
+    public void setDoctorName(String doctorName) { this.doctorName = doctorName; }
 
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
+    public String getPatientId() { return patientId; }
+    public void setPatientId(String patientId) { this.patientId = patientId; }
 
-    public String getStatus() {
-        return status;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public String getTimestamp() { return timestamp; }
+    public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
 
-    public String getTimestamp() {
-        return timestamp;
-    }
+    public String getTransactionId() { return transactionId; }
+    public void setTransactionId(String transactionId) { this.transactionId = transactionId; }
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
+    public Long getBlockNumber() { return blockNumber; }
+    public void setBlockNumber(Long blockNumber) { this.blockNumber = blockNumber; }
+
+    public String getValidationCode() { return validationCode; }
+    public void setValidationCode(String validationCode) { this.validationCode = validationCode; }
+
+    public String getResponsePayload() { return responsePayload; }
+    public void setResponsePayload(String responsePayload) { this.responsePayload = responsePayload; }
+
+    public String getInputArgs() { return inputArgs; }
+    public void setInputArgs(String inputArgs) { this.inputArgs = inputArgs; }
+
+    public String getEndorsers() { return endorsers; }
+    public void setEndorsers(String endorsers) { this.endorsers = endorsers; }
 }

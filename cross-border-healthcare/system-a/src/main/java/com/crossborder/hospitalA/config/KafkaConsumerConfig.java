@@ -9,6 +9,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
@@ -20,24 +21,33 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, PatientDataRequest> consumerFactory() {
-        JsonDeserializer<PatientDataRequest> deserializer = new JsonDeserializer<>(PatientDataRequest.class, false);
+        JsonDeserializer<PatientDataRequest> deserializer =
+                new JsonDeserializer<>(PatientDataRequest.class, false);
         deserializer.addTrustedPackages("com.crossborder.hospitalA.model");
 
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 System.getenv().getOrDefault("SPRING_KAFKA_BOOTSTRAP_SERVERS", "kafka:9092"));
-
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "hospitalA-group");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
 
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), deserializer);
     }
 
+
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, PatientDataRequest> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, PatientDataRequest> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String, PatientDataRequest> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+
+        // Manual acknowledgment mode to support Acknowledgment parameter in listener
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+
         return factory;
     }
 }

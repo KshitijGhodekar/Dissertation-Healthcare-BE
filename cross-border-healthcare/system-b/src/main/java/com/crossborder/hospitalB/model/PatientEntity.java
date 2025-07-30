@@ -10,7 +10,7 @@ public class PatientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String requestId;
     private String patientId;
     private String name;
     private int age;
@@ -23,10 +23,17 @@ public class PatientEntity {
     private String hospital;
     private String medication;
     private String testResults;
+    @Lob
+    @Column(name = "pdf_report")
+    private byte[] pdfReport;
 
-    // Getters and Setters
+    // ---------------- Getters & Setters ----------------
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public String getRequestId() { return requestId; }
+    public void setRequestId(String requestId) { this.requestId = requestId; }
 
     public String getPatientId() { return patientId; }
     public void setPatientId(String patientId) { this.patientId = patientId; }
@@ -63,4 +70,7 @@ public class PatientEntity {
 
     public String getTestResults() { return testResults; }
     public void setTestResults(String testResults) { this.testResults = testResults; }
+
+    public byte[] getPdfReport() { return pdfReport; }
+    public void setPdfReport(byte[] pdfReport) { this.pdfReport = pdfReport; }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 public class PatientDataRequest implements Serializable {
 
+    private String requestId;
     private String doctorId;
     private String doctorName;
     private String patientId;
@@ -16,7 +17,9 @@ public class PatientDataRequest implements Serializable {
 
     public PatientDataRequest() {}
 
-    public PatientDataRequest(String doctorId, String doctorName, String patientId, String timestamp, String purpose, String hospitalName) {
+    public PatientDataRequest(String requestId, String doctorId, String doctorName, String patientId,
+                              String timestamp, String purpose, String hospitalName) {
+        this.requestId = requestId;
         this.doctorId = doctorId;
         this.doctorName = doctorName;
         this.patientId = patientId;
@@ -26,6 +29,9 @@ public class PatientDataRequest implements Serializable {
     }
 
     // Getters and Setters
+    public String getRequestId() { return requestId; }
+    public void setRequestId(String requestId) { this.requestId = requestId; }
+
     public String getDoctorId() { return doctorId; }
     public void setDoctorId(String doctorId) { this.doctorId = doctorId; }
 
@@ -53,7 +59,8 @@ public class PatientDataRequest implements Serializable {
     @Override
     public String toString() {
         return "PatientDataRequest{" +
-                "doctorId='" + doctorId + '\'' +
+                "requestId='" + requestId + '\'' +
+                ", doctorId='" + doctorId + '\'' +
                 ", doctorName='" + doctorName + '\'' +
                 ", patientId='" + patientId + '\'' +
                 ", patientIds=" + patientIds +

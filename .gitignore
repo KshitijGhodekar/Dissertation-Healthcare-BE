@@ -42,3 +42,7 @@ wallet/
 # Docker/Runtime
 *.log
 .env
+
+# Spring Boot secrets
+application.yml
+application-secrets.yml

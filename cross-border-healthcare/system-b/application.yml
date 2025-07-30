@@ -7,11 +7,16 @@ spring:
     username: postgres
     password: Kshitij@7
     driver-class-name: org.postgresql.Driver
+    hikari:
+      auto-commit: false
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+      jdbc:
+        lob:
+          non_contextual_creation: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -38,6 +43,9 @@ spring:
 
 topic:
   patient-data: patient-data-request
+
+security:
+  aes-key: 1234567890123456
 
 hospital:
   kafka:

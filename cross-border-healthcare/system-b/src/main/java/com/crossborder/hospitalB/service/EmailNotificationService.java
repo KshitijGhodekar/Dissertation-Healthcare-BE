@@ -12,6 +12,8 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.UnitValue;
 import com.itextpdf.io.font.constants.StandardFonts;
 import jakarta.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamSource;
@@ -24,38 +26,34 @@ import java.io.ByteArrayOutputStream;
 @Service
 public class EmailNotificationService {
 
+    private static final Logger logger = LoggerFactory.getLogger(EmailNotificationService.class);
+
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendPatientDataPDF(String to, String doctorId, PatientEntity patient, boolean granted) {
+    // Now returns byte[]
+    public byte[] sendPatientDataPDF(String to, String doctorId, PatientEntity patient, boolean granted) {
         try {
-            // Generate encrypted PDF
+            // 1. Generate encrypted PDF
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             WriterProperties props = new WriterProperties()
                     .setStandardEncryption(
                             "doctor123".getBytes(),
                             "owner123".getBytes(),
                             EncryptionConstants.ALLOW_PRINTING,
-                            EncryptionConstants.ENCRYPTION_AES_128);
+                            EncryptionConstants.ENCRYPTION_AES_128
+                    );
 
             PdfWriter writer = new PdfWriter(baos, props);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
 
-            // Load fonts
             PdfFont regularFont = PdfFontFactory.createFont(StandardFonts.HELVETICA);
             PdfFont boldFont = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
 
-            // Title
-            Paragraph title = new Paragraph("Patient Health Report")
-                    .setFont(boldFont)
-                    .setFontSize(16)
-                    .setMarginBottom(20);
-            document.add(title);
+            document.add(new Paragraph("Patient Health Report").setFont(boldFont).setFontSize(16).setMarginBottom(20));
 
-            // Table with patient details
-            Table table = new Table(UnitValue.createPercentArray(new float[]{1, 2}))
-                    .useAllAvailableWidth();
+            Table table = new Table(UnitValue.createPercentArray(new float[]{1, 2})).useAllAvailableWidth();
 
             table.addCell(new Cell().add(new Paragraph("Patient ID").setFont(boldFont)));
             table.addCell(new Cell().add(new Paragraph(patient.getPatientId()).setFont(regularFont)));
@@ -82,10 +80,10 @@ public class EmailNotificationService {
             table.addCell(new Cell().add(new Paragraph(patient.getTestResults()).setFont(regularFont)));
 
             table.addCell(new Cell().add(new Paragraph("Date of Admission").setFont(boldFont)));
-            table.addCell(new Cell().add(new Paragraph(patient.getDateOfAdmission().toString()).setFont(regularFont))); // ✅ Fix
+            table.addCell(new Cell().add(new Paragraph(patient.getDateOfAdmission().toString()).setFont(regularFont)));
 
             table.addCell(new Cell().add(new Paragraph("Discharge Date").setFont(boldFont)));
-            table.addCell(new Cell().add(new Paragraph(patient.getDischargeDate().toString()).setFont(regularFont))); // ✅ Fix
+            table.addCell(new Cell().add(new Paragraph(patient.getDischargeDate().toString()).setFont(regularFont)));
 
             table.addCell(new Cell().add(new Paragraph("Doctor").setFont(boldFont)));
             table.addCell(new Cell().add(new Paragraph(patient.getDoctor()).setFont(regularFont)));
@@ -96,7 +94,7 @@ public class EmailNotificationService {
             document.add(table);
             document.close();
 
-            // Send email with PDF attached
+            // 2. Send email
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
@@ -109,11 +107,14 @@ public class EmailNotificationService {
             helper.addAttachment("patient-report.pdf", pdfAttachment);
 
             mailSender.send(message);
-            System.out.println("Encrypted PDF email sent to: " + to);
+            logger.info("Encrypted PDF email sent to: {}", to);
+
+            // Return PDF bytes for DB storage
+            return baos.toByteArray();
 
         } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Failed to send PDF email.");
+            logger.error("Failed to send encrypted PDF email to {}: {}", to, e.getMessage(), e);
+            return null;
         }
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -54,6 +55,38 @@ public class FabricClient {
         this.contract = network.getContract("healthcare");
 
         log.info("FabricClient initialised — channel: {}", network.getChannel().getName());
+    }
+
+    /** Safe method to get the default healthcare contract */
+    public Contract getHealthcareContract() {
+        return this.contract;
+    }
+
+    /** Safe method to get any contract if needed */
+    public Contract getContract(String contractName) {
+        return network.getContract(contractName);
+    }
+
+    /**
+     * Health check method for Fabric network
+     * Checks peer ports (7051, 9051) instead of a chaincode call
+     */
+    public boolean isFabricAlive() {
+        String[] peers = {"peer0.org1.example.com", "peer0.org2.example.com"};
+        int[] ports = {7051, 9051};
+
+        for (int i = 0; i < peers.length; i++) {
+            try (Socket socket = new Socket(peers[i], ports[i])) {
+                if (socket.isConnected()) {
+                    log.info("Fabric peer {}:{} is reachable", peers[i], ports[i]);
+                    return true; // If any peer is up, Fabric is alive
+                }
+            } catch (Exception e) {
+                log.warn("Unable to reach Fabric peer {}:{} - {}", peers[i], ports[i], e.getMessage());
+            }
+        }
+        log.error("No Fabric peers are reachable");
+        return false; // No peers reachable
     }
 
     public FabricResponse isDoctorAuthorizedDetailed(

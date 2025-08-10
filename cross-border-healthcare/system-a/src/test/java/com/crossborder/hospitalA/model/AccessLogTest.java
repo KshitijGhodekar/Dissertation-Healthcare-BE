@@ -2,7 +2,8 @@ package com.crossborder.hospitalA.model;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 public class AccessLogTest {
 
     @Test
@@ -13,7 +14,8 @@ public class AccessLogTest {
         log.setPatientId("P001");
         log.setPurpose("treatment");
         log.setHospitalName("India Hospital");
-        log.setTimestamp("2025-07-25T14:00:00Z");
+        LocalDateTime timestamp = LocalDateTime.parse("2025-07-25T14:10:00");
+        log.setTimestamp(timestamp);
         log.setAccessGranted(true);
 
         assertEquals("D001", log.getDoctorId());
@@ -21,7 +23,8 @@ public class AccessLogTest {
         assertEquals("P001", log.getPatientId());
         assertEquals("treatment", log.getPurpose());
         assertEquals("India Hospital", log.getHospitalName());
-        assertEquals("2025-07-25T14:00:00Z", log.getTimestamp());
+        String formatted = log.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        assertEquals("2025-07-25T14:10:00", formatted);
         assertTrue(log.isAccessGranted());
     }
 }

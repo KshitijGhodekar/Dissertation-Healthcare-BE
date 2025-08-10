@@ -67,13 +67,19 @@ public class PatientRequestKafkaProducerTest {
 
     @Test
     public void testSendWithNoPatientIds() throws Exception {
-        PatientDataRequest request = new PatientDataRequest();  // No ID set
+        PatientDataRequest request = new PatientDataRequest();
         String jsonPayload = "{\"dummy\":\"json\"}";
 
         when(objectMapper.writeValueAsString(request)).thenReturn(jsonPayload);
 
-        producer.sendPatientDataRequest(request);
+        // Expect an exception to be thrown
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> producer.sendPatientDataRequest(request));
 
+        // Verify the exception message
+        assertEquals("Kafka publish failed", exception.getMessage());
+
+        // Verify that no Kafka send was attempted
         verify(kafkaTemplate, never()).send(any(), any(), any());
     }
 }

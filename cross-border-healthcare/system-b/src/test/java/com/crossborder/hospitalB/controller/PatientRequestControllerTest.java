@@ -2,10 +2,12 @@ package com.crossborder.hospitalB.controller;
 
 import com.crossborder.hospitalB.model.PatientDataRequest;
 import com.crossborder.hospitalB.producer.PatientRequestKafkaProducer;
+import com.crossborder.hospitalB.repository.PatientRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -13,20 +15,26 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PatientRequestController.class)
+@AutoConfigureMockMvc(addFilters = false)  // Disable Spring Security filters
 class PatientRequestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private PatientRequestKafkaProducer producer;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @MockBean
+    private PatientRequestKafkaProducer producerService; // Mock Kafka producer
+
+    @MockBean
+    private PatientRepository patientRepository; // Mock DB
 
     @Test
     void testRequestPatientData_Success() throws Exception {
@@ -49,13 +57,14 @@ class PatientRequestControllerTest {
                 "2025-07-25T12:00:00", "Test", "Test-Hospital", "REQ999"
         );
 
+        // Simulate Kafka failure
         Mockito.doThrow(new RuntimeException("Kafka failure"))
-                .when(producer).sendPatientDataRequest(Mockito.any());
+                .when(producerService).sendPatientDataRequest(Mockito.any());
 
         mockMvc.perform(post("/api/request")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isInternalServerError())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Failed to send request")));
+                .andExpect(content().string(containsString("Failed to send request")));
     }
 }

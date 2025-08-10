@@ -1,6 +1,7 @@
 package com.crossborder.hospitalA.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "fabric_logs")
@@ -14,7 +15,9 @@ public class FabricLog {
     private String doctorName;
     private String patientId;
     private String status;
-    private String timestamp;
+
+    @Column(name = "timestamp", columnDefinition = "TIMESTAMP")
+    private LocalDateTime timestamp;
 
     // New Fabric Transaction Details
     private String transactionId;
@@ -46,8 +49,8 @@ public class FabricLog {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
-    public String getTimestamp() { return timestamp; }
-    public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
 
     public String getTransactionId() { return transactionId; }
     public void setTransactionId(String transactionId) { this.transactionId = transactionId; }

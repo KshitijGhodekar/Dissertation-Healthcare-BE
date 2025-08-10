@@ -1,6 +1,8 @@
 package com.crossborder.hospitalA.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
 import java.time.Instant;
 
 @Entity
@@ -16,7 +18,8 @@ public class AccessLog {
     private String patientId;
     private String purpose;
     private String hospitalName;
-    private String timestamp;
+    @Column(name = "timestamp", columnDefinition = "TIMESTAMP")
+    private LocalDateTime timestamp;
     private boolean accessGranted;
 
     public AccessLog() {}
@@ -38,8 +41,8 @@ public class AccessLog {
     public String getHospitalName() { return hospitalName; }
     public void setHospitalName(String hospitalName) { this.hospitalName = hospitalName; }
 
-    public String getTimestamp() { return timestamp; }
-    public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
 
     public boolean isAccessGranted() { return accessGranted; }
     public void setAccessGranted(boolean accessGranted) { this.accessGranted = accessGranted; }

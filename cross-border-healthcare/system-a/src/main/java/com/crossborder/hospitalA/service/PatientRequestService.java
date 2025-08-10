@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -67,7 +69,10 @@ public class PatientRequestService {
                     request.getHospitalName()
             );
             logger.info("Fabric verification completed. Access granted: {}", response.isAccessGranted());
-
+            LocalDateTime logTime = LocalDateTime.ofInstant(
+                    Instant.parse(request.getTimestamp()),
+                    ZoneId.systemDefault()
+            );
             // 2. Log access attempt
             AccessLog accessLog = new AccessLog();
             accessLog.setDoctorId(request.getDoctorId());
@@ -75,7 +80,7 @@ public class PatientRequestService {
             accessLog.setPatientId(request.getPatientId());
             accessLog.setPurpose(request.getPurpose());
             accessLog.setHospitalName(request.getHospitalName());
-            accessLog.setTimestamp(request.getTimestamp());
+            accessLog.setTimestamp(logTime);
             accessLog.setAccessGranted(response.isAccessGranted());
             accessLogRepository.save(accessLog);
             logger.debug("Access log saved for patient: {}", request.getPatientId());
@@ -86,7 +91,7 @@ public class PatientRequestService {
             fabricLog.setDoctorName(request.getDoctorName());
             fabricLog.setPatientId(request.getPatientId());
             fabricLog.setStatus(response.isAccessGranted() ? "granted" : "denied");
-            fabricLog.setTimestamp(request.getTimestamp());
+            fabricLog.setTimestamp(logTime);
 
             // Detailed Fabric fields
             fabricLog.setTransactionId(response.getTransactionId());
@@ -135,6 +140,8 @@ public class PatientRequestService {
             // 6. Encrypt
             logger.info("Encrypting patient data for patientId: {}", request.getPatientId());
             String encryptedBase64 = AESEncryptionUtil.encrypt(json);
+            logger.info("Encrypted patient data (Base64, first 50 chars): {}...",
+                    encryptedBase64.substring(0, Math.min(50, encryptedBase64.length())));
             logger.info("Patient data encrypted successfully for patientId: {}", request.getPatientId());
 
             // 7. Sign with ECDSA

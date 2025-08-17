@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="ULlogo.png" alt="Dissertation Project Logo" width="200"/>
+  <img src="ULlogo.svg" alt="Dissertation Project Logo" width="200"/>
 </p>
 
 ## Dissertation

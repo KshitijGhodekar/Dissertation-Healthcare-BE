@@ -71,7 +71,13 @@ Data exchange is secured using:
 ---
 # Getting Started
 
-This guide explains how to set up and run the backend for the **Cross-Border Healthcare Data Exchange** system.
+To run the Cross-Border Healthcare Data Exchange system, supporting services and hospital microservices need to be started.  
+
+👉 Please refer to the [backend setup README](cross-border-healthcare/README.md) for detailed instructions on:  
+- Starting Kafka, PostgreSQL, and Hyperledger Fabric  
+- Initializing the Fabric channel and deploying chaincode  
+- Running System A (Data Provider) and System B (Data Requester)  
+- Triggering cross-border data requests  
 
 ---
 

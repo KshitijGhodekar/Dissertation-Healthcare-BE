@@ -10,4 +10,5 @@ import org.springframework.transaction.annotation.Transactional;
 public interface PatientRepository extends JpaRepository<PatientEntity, Long> {
     boolean existsByRequestId(String requestId);
     Optional<PatientEntity> findByPatientId(String patientId);
+
 }

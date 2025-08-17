@@ -32,10 +32,10 @@ It is based on two Spring Boot microservices:
 - **System B** → Ireland Hospital (**Data Requester**)  
 
 Data exchange is secured using:
-- 🔒 **AES-256 encryption** – Confidentiality  
-- 🖊 **ECDSA digital signatures** – Authenticity & Integrity  
-- ⛓ **Hyperledger Fabric** – Immutable Audit Logs  
-- 🌍 **HL7 FHIR** – Healthcare Data Interoperability  
+- **AES-256 encryption** – Confidentiality  
+- **ECDSA digital signatures** – Authenticity & Integrity  
+- **Hyperledger Fabric** – Immutable Audit Logs  
+- **HL7 FHIR** – Healthcare Data Interoperability  
 
 ---
 
@@ -59,8 +59,8 @@ Data exchange is secured using:
     <code>
     cross-border-healthcare/
     │
-    ├── fabric-network/        # Hyperledger Fabric network (Node 1 and Node 2 - hospital systems)
-    ├── fhir-conditions/       # FHIR validation and translation (Node 1 and Node 2)
+    ├── fabric-network/        # Hyperledger Fabric network (System A and System B - hospital systems)
+    ├── fhir-conditions/       # FHIR validation and translation (System A and System B)
     ├── kafka/                 # API endpoints for cross-border data access
     ├── system-a/              # System A (India Hospital) - Blockchain interaction & Kafka consumer
     ├── system-b/              # System B (Ireland Hospital) - Kafka producer & response handler

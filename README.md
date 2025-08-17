@@ -28,8 +28,8 @@ University of Limerick
 The backend implements a **Blockchain-Backed Data Exchange Broker** for secure, auditable, and real-time cross-border healthcare data sharing.  
 It is based on two Spring Boot microservices:
 
-- **System A** → India Hospital (**Data Provider**)  
-- **System B** → Ireland Hospital (**Data Requester**)  
+- **System A** → e.g. India Hospital (**Data Provider**)  
+- **System B** → e.g. Ireland Hospital (**Data Requester**)  
 
 Data exchange is secured using:
 - **AES-256 encryption** – Confidentiality  

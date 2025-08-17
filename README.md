@@ -69,30 +69,9 @@ Data exchange is secured using:
 </pre>
 
 ---
-## Getting Started
+# Getting Started
 
-## Start Supporting Services
-### Start Kafka and PostgreSQL using Docker
-docker-compose up -d
-
-
-## Start the Fabric Network and Create Channel
-cd fabric-samples/test-network
-
-### Clean up old containers and start a fresh network
-./network.sh down && docker system prune -af
-./network.sh up createChannel -c mychannel
-
-
-
-## Run Backend Microservices
-### Run System A (India Hospital)
-cd system-a
-./mvnw spring-boot:run
-
-### Run System B (Ireland Hospital)
-cd system-b
-./mvnw spring-boot:run
+This guide explains how to set up and run the backend for the **Cross-Border Healthcare Data Exchange** system.
 
 ---
 

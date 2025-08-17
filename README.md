@@ -58,13 +58,20 @@ Data exchange is secured using:
 <pre lang="text">
     <code>
     cross-border-healthcare/
-    │
-    ├── fabric-network/        # Hyperledger Fabric network (System A and System B - hospital systems)
-    ├── fhir-conditions/       # FHIR validation and translation (System A and System B)
-    ├── kafka/                 # API endpoints for cross-border data access
-    ├── system-a/              # System A (India Hospital) - Blockchain interaction & Kafka consumer
-    ├── system-b/              # System B (Ireland Hospital) - Kafka producer & response handler
-    └── docker-compose.yml     # Orchestration for Kafka, PostgreSQL, and services
+   │
+   ├── encryption-lib/        # Shared encryption utilities
+   ├── fabric-network/        # Hyperledger Fabric setup and chaincode
+   ├── fhir-conditions/       # FHIR validation and transformation
+   ├── kafka/                 # Kafka cluster setup
+   │
+   ├── system-a/              # System A (e.g. India Hospital) - AES encryption, ECDSA signing, Blockchain client, Kafka consumer
+   ├── system-b/              # System B (e.g. Ireland Hospital) - AES decryption, ECDSA verification, Kafka producer & response handler
+   │
+   ├── .env                   # Environment variables
+   ├── docker-compose.yml     # Orchestration for Kafka, PostgreSQL, and services
+   ├── README.md              # Project documentation
+   └── .gitignore             # Git ignore rules
+
     </code>
 </pre>
 

@@ -46,3 +46,4 @@ wallet/
 # Spring Boot secrets
 application.yml
 application-secrets.yml
+node_modules/
